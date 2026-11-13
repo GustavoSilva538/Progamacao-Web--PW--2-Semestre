@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financeiro - oBOTICÁRIO</title>
+    <link rel="shortcut icon" href="oBoticario.ico" type="image/x-icon">
     <style>
         * {
             margin: 0;
@@ -52,7 +53,7 @@
             background-color: #2b6b53;
         }
 
-        /* Estilos da frase no rodapé do menu */
+        
         .frase {
             position: absolute;
             bottom: 25px;
@@ -373,7 +374,7 @@
 </head>
 <body>
 
-    <!-- Menu Lateral Incorporado -->
+    
     <aside class="menu">
         <h2>oBOTICÁRIO</h2>
         <nav>
@@ -391,7 +392,6 @@
 
     <main class="conteudo">
         <header class="topo">
-            <!-- Adicionado um ID para referenciar no JavaScript -->
             <input type="search" id="input-busca" placeholder="Buscar nas movimentações...">
             <p id="saudacao-usuario">Olá, Administrador</p>
         </header>
@@ -407,7 +407,6 @@
                     <option>Outubro de 2026</option>
                     <option>Novembro de 2026</option>
                 </select>
-                <!-- Botão que aciona a função de adicionar nova movimentação -->
                 <button class="btn-adicionar" onclick="solicitarNovaMovimentacao()">+ Nova Movimentação</button>
             </div>
         </section>
@@ -415,7 +414,6 @@
         <section class="resumos">
             <div class="cartao">
                 <p>Receita total</p>
-                <!-- O valor será injetado pelo JavaScript aqui -->
                 <strong id="display-receita">R$ 0,00</strong>
             </div>
             <div class="cartao despesa">
@@ -478,7 +476,6 @@
                             <th>Tipo</th>
                         </tr>
                     </thead>
-                    <!-- O corpo da tabela foi esvaziado para ser populado dinamicamente pelo JS -->
                     <tbody id="tbody-movimentacoes">
                     </tbody>
                 </table>
@@ -486,10 +483,8 @@
         </section>
     </main>
 
-    <!-- Lógica JavaScript integrada localmente -->
     <script>
-        // 1. ESTRUTURA DE DADOS (Arrays e Objetos)
-        // Criamos um array de objetos para armazenar o estado inicial da tabela.
+        // 1.
         let movimentacoes = [
             { data: '16/10/2026', descricao: 'Venda de produtos', categoria: 'Vendas', valor: 249.80, tipo: 'Receita' },
             { data: '15/10/2026', descricao: 'Compra de produtos', categoria: 'Fornecedores', valor: -1250.00, tipo: 'Despesa' },
@@ -498,9 +493,8 @@
             { data: '12/10/2026', descricao: 'Marketing Digital', categoria: 'Marketing', valor: -150.00, tipo: 'Despesa' }
         ];
 
-        // 2. FUNÇÃO DE CÁLCULO FINANCEIRO (Arrow Functions + filter/reduce)
+        // 2.
         const atualizarResumos = (dados) => {
-            // Utilizamos o método .filter() para separar receitas de despesas e .reduce() para somar os valores.
             const totalReceitas = dados
                 .filter(item => item.valor > 0)
                 .reduce((acumulador, itemAtual) => acumulador + itemAtual.valor, 0);
@@ -511,24 +505,21 @@
 
             const lucroLiquido = totalReceitas - totalDespesas;
 
-            // Manipulamos o DOM via innerHTML para injetar os resultados calculados formatados
             document.getElementById('display-receita').innerHTML = `R$ ${totalReceitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
             document.getElementById('display-despesa').innerHTML = `R$ ${totalDespesas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
             document.getElementById('display-lucro').innerHTML = `R$ ${lucroLiquido.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
         };
 
-        // 3. FUNÇÃO DE RENDERIZAÇÃO DA TABELA (DOM Manipulation + forEach)
+        // 3.
         const renderizarTabela = (dados) => {
             const tbody = document.getElementById('tbody-movimentacoes');
-            tbody.innerHTML = ''; // Limpa as linhas atuais antes de recriar
+            tbody.innerHTML = '';
             
-            // Itera sobre o array para criar cada linha (tr) da tabela dinamicamente
             dados.forEach(movimentacao => {
                 const classeCor = movimentacao.valor > 0 ? 'entrada' : 'saida';
                 const sinal = movimentacao.valor > 0 ? '+' : '-';
                 const valorAbsoluto = Math.abs(movimentacao.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
                 
-                // Uso de Template Literals (Crase ` `) para interpolar variáveis e HTML de forma limpa
                 tbody.innerHTML += `
                     <tr>
                         <td>${movimentacao.data}</td>
@@ -541,43 +532,35 @@
             });
         };
 
-        // 4. SISTEMA DE BUSCA/FILTRO (Eventos + filter)
+        // 4.
         document.getElementById('input-busca').addEventListener('input', (evento) => {
             const termoBuscado = evento.target.value.toLowerCase();
             
-            // Retorna apenas os objetos em que a descrição contenha o termo digitado
             const dadosFiltrados = movimentacoes.filter(item => 
                 item.descricao.toLowerCase().includes(termoBuscado)
             );
-            
-            // Atualiza a tabela apenas com os dados que passaram no filtro
+
             renderizarTabela(dadosFiltrados);
         });
 
-        // 5. TRATAMENTO DE EXCEÇÃO E INSERÇÃO (Try...Catch + prompt/alert + unshift)
+        // 5.
         const solicitarNovaMovimentacao = () => {
             try {
-                // Captura os dados via prompt() do navegador
                 const desc = prompt("Descrição da movimentação (ex: Venda de Perfume):");
                 if (!desc || desc.trim() === "") throw "A descrição não pode ficar vazia.";
 
                 const valorString = prompt("Informe o valor:\n(Use números positivos para RECEITA e negativos como -50 para DESPESA)");
                 if (!valorString) throw "A operação foi cancelada.";
                 
-                // Converte a string digitada para número decimal (Float)
                 const valorNum = parseFloat(valorString.replace(',', '.'));
                 
-                // Verifica se a conversão resultou em um Not-A-Number (NaN)
                 if (isNaN(valorNum)) throw "Você não digitou um número válido.";
 
-                // Define a categoria e tipo automaticamente baseando-se no sinal do valor (Operador Ternário)
                 const tipoCalculado = valorNum >= 0 ? 'Receita' : 'Despesa';
                 const categoriaCalculada = valorNum >= 0 ? 'Vendas' : 'Outros';
                 
-                // Coleta a data atual formatada
                 const dataHoje = new Date().toLocaleDateString('pt-BR');
 
-                // O método unshift() adiciona o novo objeto no INÍCIO do Array
                 movimentacoes.unshift({
                     data: dataHoje,
                     descricao: desc,
@@ -586,20 +569,17 @@
                     tipo: tipoCalculado
                 });
 
-                // Atualiza a interface gráfica imediatamente
                 renderizarTabela(movimentacoes);
                 atualizarResumos(movimentacoes);
                 
                 alert("Movimentação cadastrada com sucesso!");
                 
             } catch (erro) {
-                // Caso ocorra qualquer erro acima, a execução pula para cá e dispara o alerta
                 alert("Erro no cadastro: " + erro);
             }
         };
 
-        // 6. INICIALIZAÇÃO DA PÁGINA
-        // Ao carregar a página, essas funções rodam para preencher as informações iniciais
+        // 6. 
         renderizarTabela(movimentacoes);
         atualizarResumos(movimentacoes);
 
