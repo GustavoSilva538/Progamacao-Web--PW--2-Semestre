@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oBoticário - Home</title>
+    <link rel="shortcut icon" href="imagem/oBoticario.ico" type="image/x-icon">
+<style>
+    *{
+        margin: 0px;
+        box-sizing: border-box;
+        padding: 0px;
+    }
+
+    body {
+        width: 100%;
+        font-family: Arial, sans-serif;
+        background-color: #64646336;
+        display: flex;
+    }
+
+    /* =========================================
+       NOVO MENU LATERAL APLICADO
+       ========================================= */
+    .menu {
+        width: 235px;
+        min-height: 100vh;
+        background-color: #0d3b2f;
+        color: white;
+        padding: 28px 18px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 2;
+    }
+
+    .menu h2 {
+        font-family: Georgia, serif;
+        font-size: 21px;
+        margin-bottom: 30px;
+        font-weight: normal;
+    }
+
+    .menu nav a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        padding: 13px 15px;
+        margin-bottom: 5px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .menu nav a:hover,
+    .menu nav .ativo {
+        background-color: #2b6b53;
+    }
+
+    .frase {
+        position: absolute;
+        bottom: 25px;
+        left: 25px;
+        color: #d7e4dc;
+    }
+
+    .frase p {
+        font-family: Georgia, serif;
+        font-style: italic;
+        margin-bottom: 10px;
+    }
+
+    .frase small {
+        font-size: 10px;
+    }
+
+    /* =========================================
+       CONTEÚDO DA PÁGINA HOME
+       ========================================= */
+    .conteudo{
+        margin-left: 235px; /* Ajustado para a largura exata do novo menu */
+        width: calc(100% - 235px);
+    }
+
+    header{
+        margin: 10px;
+        margin-bottom: 50px;
+    }
+
+    header > h1 {
+        font-family: Georgia, serif;
+    }
+
+    #busca{
+        display: flex;
+        position: relative;
+        padding: 10px;
+        align-items: end;
+        justify-content: end;
+    }
+
+    #boasvindas{
+        display: flex;
+        position: relative;
+        justify-content: space-between;
+        color: #0d3b2f;
+        font-family: Georgia, serif;
+        margin: 20px;
+    }
+
+    #busca img{
+        position: relative;
+        width: 50px;
+        height: 50px;
+        border-radius: 100px;
+        border: 1px solid;
+        top: 20px;
+        left: 10px;
+    }
+
+    #boasvindas p{
+        position: relative;
+        bottom: 16px;
+    }
+
+    .banner{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 40px;
+        min-width: 60%;
+        margin-left: 100px;
+        border-radius: 15px;
+        background: linear-gradient(to bottom right, #0d352a, #4b805c); 
+    }
+
+    .textoBanner{
+        font-family: Georgia, serif;
+        color: white;
+    }
+
+    .textoBanner p{
+        font-size: x-small;
+    }
+
+    .imga{
+        display: flex;
+        gap: 10px;
+        position: relative;
+        justify-content: space-between;
+    }
+
+    .imga img{
+        max-width: 300px;
+        min-width: 200px;
+        height: 300px;
+        border-radius: 20px;
+    }
+
+    .section{
+        display: flex;
+        width: 100%;
+        height: 150px;
+        gap: 20px;
+        margin: 50px;
+        min-width: 100%;
+    }
+
+    .boxes{
+        width: 100%;
+        height: 100px;
+        max-height: 100%;
+        padding: 20px;
+        margin-top: 10px;
+        border: 1px solid;
+        border-color: rgb(224, 215, 215);
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.589);
+        color: #2b6b53;
+    }
+
+    .boxes:hover{
+        font-size: large;
+        padding: 1%;
+        margin: 1%;
+    }
+
+    .boxes h3{
+        padding-top: 5px;
+        padding-bottom: 5px;
+        color: black;
+    }
+
+    .boxes p{
+        color: #4b805c;
+    }
+
+    .section2{
+        display: flex;
+        width: 100%;
+        position: relative;
+        margin-left: 100px;
+    }
+
+    #textoVendas{
+        margin: 20px;
+        margin-left: 100px;
+        color: #4b805c;
+    }
+
+    .tabela h4{
+        padding-bottom: 10px;
+    }
+
+    .section2 table{
+        padding: 10px;
+        border: 1px solid rgb(224, 215, 215);
+        background-color: rgba(255, 255, 255, 0.589);
+        border: 1px solid gray;
+        border-radius: 10px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        margin-right: 100px;
+        width: 100%;
+    }
+
+    .section2 th{
+        border: 0px solid;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .section2 td{
+        padding: 30px;
+        border: 0px;
+        text-align: center;
+    }
+
+    /* =========================================
+       RESPONSIVIDADE (Tablets e Celulares)
+       ========================================= */
+    @media (max-width: 1050px) {
+        .conteudo {
+            margin-left: 235px;
+            width: calc(100% - 235px);
+            padding: 0 20px;
+        }
+
+        .banner {
+            margin-left: 0;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 25px;
+        }
+
+        .imga {
+            width: 100%;
+            justify-content: flex-start;
+        }
+
+        .imga img {
+            max-width: 220px;
+            min-width: 150px;
+            height: 200px;
+        }
+
+        .section {
+            margin: 30px 0;
+            height: auto;
+            flex-wrap: wrap;
+        }
+
+        .boxes {
+            flex: 1 1 200px;
+            height: auto;
+        }
+
+        #textoVendas {
+            margin-left: 0;
+        }
+
+        .section2 {
+            margin-left: 0;
+            overflow-x: auto;
+        }
+
+        .section2 table {
+            margin-right: 0;
+        }
+    }
+
+    @media (max-width: 768px) {
+        body {
+            flex-direction: column;
+        }
+
+        /* Adaptação do Novo Menu para Celular */
+        .menu {
+            position: static; 
+            width: 100%;
+            min-height: auto;
+            padding: 18px;
+        }
+
+        .menu h2 { 
+            margin-bottom: 12px; 
+            text-align: center;
+        }
+
+        .menu nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .menu nav a { 
+            padding: 10px; 
+            margin: 2px;
+        }
+
+        .frase { 
+            display: none; 
+        }
+
+        /* Ajustes do conteúdo para Celular */
+        .conteudo {
+            margin-left: 0;
+            width: 100%;
+            padding: 15px;
+        }
+
+        header {
+            margin: 0 0 25px 0;
+        }
+
+        #boasvindas {
+            flex-direction: column;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        #boasvindas p {
+            position: static;
+        }
+
+        #busca {
+            justify-content: end;
+            align-items: center;
+            padding: 10px;
+        }
+
+        #busca > #nome-usuario{
+            margin: 4px;
+        }
+
+        #busca img {
+            position: static;
+        }
+
+        .banner {
+            padding: 20px;
+        }
+
+        .imga {
+            flex-direction: column;
+        }
+
+        .imga img {
+            max-width: 100%;
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .section {
+            flex-direction: column;
+            margin: 20px 0;
+            gap: 12px;
+        }
+
+        .boxes {
+            margin-top: 0;
+        }
+
+        .section2 {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .section2 td {
+            padding: 15px 10px;
+        }
+    }
+</style>
+</head>
+<body>
+    <!-- NOVO MENU -->
+    <aside class="menu">
+        <h2>oBOTICÁRIO</h2>
+        <nav>
+            <a href="Home.html" class="ativo">Home</a>
+            <a href="clientes.html">Clientes</a>
+            <a href="vendas.html">Vendas</a>
+            <a href="financeiro.html">Financeiro</a>
+            <a href="inventario.html">Inventário</a>
+        </nav>
+        <div class="frase">
+            <p>Beleza é<br>se sentir bem.</p>
+            <small>O BOTICÁRIO</small>
+        </div>
+    </aside>
+
+    <main class="conteudo">
+        <header class="topo">
+            <div id="busca">
+                
+            </div>
+            <div id="boasvindas">
+                <h1>Bem-vindo(a)</h1>
+            </div>
+        </header>
+
+        <div class="banner">
+            <div class="textoBanner">
+                <h2>oBoticario</h2>
+                <h2>A beleza que transforma</h2>
+                <p>Mais do que produtos, entregamos autocuidado, autoestima e bem-estar.</p>
+            </div>
+            
+            <div class="imga">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKeUOSszeZCUWkv1RTQhwjuy5iwiYA8oPkybRfiFfIuWlrlBXttYDhHheE&s=10" alt="">
+                <img src="http://t1.gstatic.com/images?q=tbn:ANd9GcSloQZDRoNsq8s7P5wx7ilApMVpqJ5ZVvoQXhhGV0kAzHoU4afStLLtIVnTFQFK4g" alt="">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="boxes">
+                <h4>Clientes</h4>
+                <h3>125</h3>
+                <p>Seus clientes atuais</p>
+            </div>        
+            <div class="boxes">
+                <h4>Vendas</h4>
+                <h3>48</h3>
+                <p>Clientes cadastrados</p>
+            </div>
+            <div class="boxes">
+                <h4>Financeiro</h4>
+                <h3>12.850,00</h3>
+                <p>Faturamento do mês</p>
+            </div>
+            <div class="boxes">
+                <h4>Inventário</h4>
+                <h3>320</h3>
+                <p>Produtos em estoque</p>
+            </div>
+        </div>
+
+        <h4 id="textoVendas">Últimas vendas</h4>
+
+        <div class="section2">
+            <table border="1">
+                <tr>
+                    <th>Clientes</th>
+                    <th>Data</th>
+                    <th>Produto(s)</th>
+                    <th>Valor</th>
+                </tr>
+                <tr>
+                    <td>Kevin</td>
+                    <td>12/04/2026</td>
+                    <td>Floratta + Hidratante</td>
+                    <td>R$ 189,90</td>
+                </tr>
+                <tr>
+                    <td>Mariana Silva</td>
+                    <td>16/10/2024</td>
+                    <td>Floratta + Hidratante</td>
+                    <td>R$ 189,90</td>
+                </tr>
+                <tr>
+                    <td>Fernanda Lima</td>
+                    <td>14/10/2024</td>
+                    <td>Egeo Dolce</td>
+                    <td>R$ 139,90</td>
+                </tr>
+            </table>                     
+        </div>
+    </main>
+
+    <script>
+        // O JavaScript de redirecionamento foi removido, pois o menu HTML (<a>) já faz isso de forma nativa.
+        // Mantida apenas a lógica que carrega o nome do usuário salvo!
+        document.addEventListener("DOMContentLoaded", function () {
+            const nomeSalvo = localStorage.getItem("usuarioLogado");
+            const emailSalvo = localStorage.getItem("emailLogado");
+
+            const elNome = document.getElementById("nome-usuario");
+            const elEmail = document.getElementById("email-usuario");
+
+            if (nomeSalvo && elNome) {
+                elNome.textContent = nomeSalvo;
+            }
+
+            if (emailSalvo && elEmail) {
+                elEmail.textContent = emailSalvo;
+            }
+        });
+    </script>
+</body>
+</html>

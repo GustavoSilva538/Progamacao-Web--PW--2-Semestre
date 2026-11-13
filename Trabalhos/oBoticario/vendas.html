@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendas - oBoticário</title>
+  <link rel="shortcut icon" href="imagem/oBoticario.ico" type="image/x-icon">
+<style>
+    /* RESET: tira as margens padrão do navegador */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  background-color: #f8f6f1;
+  color: #1c2b24;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+button, input, select {
+  font-family: inherit;
+}
+
+/* LAYOUT: sidebar e conteúdo lado a lado */
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   NOVO MENU LATERAL APLICADO
+   ========================================================================== */
+.menu {
+    width: 235px;
+    min-height: 100vh;
+    background-color: #0F3B2E;
+    color: white;
+    padding: 28px 18px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
+
+.menu h2 {
+    font-family: Georgia, serif;
+    font-size: 21px;
+    margin-bottom: 30px;
+    font-weight: normal;
+}
+
+.menu nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 13px 15px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.menu nav a:hover,
+.menu nav .ativo {
+    background-color: #2b6b53;
+}
+
+.frase {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    color: #d7e4dc;
+}
+
+.frase p {
+    font-family: Georgia, serif;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.frase small {
+    font-size: 10px;
+}
+
+/* ==========================================================================
+   CONTEÚDO PRINCIPAL
+   ========================================================================== */
+.conteudo {
+  margin-left: 235px; /* Empurra o conteúdo para a direita do menu fixo */
+  width: calc(100% - 235px);
+  padding: 24px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* barra do topo */
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topo input {
+  width: 400px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid #e7e3da;
+  border-radius: 8px;
+}
+
+.usuario {
+  display: flex;
+  gap: 16px;
+}
+
+/* título da página */
+.titulo-pagina {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titulo-pagina h1 {
+  font-size: 32px;
+}
+
+.titulo-pagina p {
+  margin-top: 4px;
+  color: #6e7b74;
+}
+
+/* botão verde (usado em 3 lugares) */
+.botao {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #1f5c46;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.botao:hover {
+  background-color: #17493a;
+}
+
+.botaolargo {
+  width: 100%;
+}
+
+/* CARDS DE RESUMO */
+.resumo {
+  display: flex;
+  gap: 16px;
+}
+
+/* flex: 1 faz os 3 cards dividirem o espaço igualmente */
+.card-resumo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px;
+  background-color: white;
+  border: 1px solid #e7e3da;
+  border-radius: 12px;
+}
+
+.icone {
+  font-size: 24px;
+}
+
+.card-resumo strong {
+  font-size: 26px;
+}
+
+.rotulo {
+  color: #6e7b74;
+}
+
+/* FORMULÁRIO E CARRINHO lado a lado */
+.venda {
+  display: flex;
+  gap: 20px;
+}
+
+.venda .painel {
+  flex: 1;
+}
+
+/* painel = caixa branca usada em várias partes */
+.painel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #e7e3da;
+  border-radius: 12px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #6e7b74;
+}
+
+select, input[type="number"] {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #e7e3da;
+  border-radius: 8px;
+  background-color: white;
+}
+
+/* quantidade e botão na mesma linha */
+.linha-quantidade {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.campo-quantidade {
+  width: 90px;
+}
+
+.linha-quantidade .botao {
+  flex: 1;
+  height: 40px;
+}
+
+/* CARRINHO */
+.carrinho {
+  background-color: #f1efe7;
+}
+
+#lista-carrinho {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background-color: white;
+  border: 1px solid #e7e3da;
+  border-radius: 8px;
+}
+
+.qtd {
+  color: #6e7b74;
+}
+
+/* margin-left: auto joga o preço e a lixeira para a direita */
+.preco {
+  margin-left: auto;
+}
+
+.btn-remover {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.vazio {
+  color: #6e7b74;
+}
+
+/* margin-top: auto deixa o total no final do painel */
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.total strong {
+  font-size: 22px;
+}
+
+/* TABELA */
+.cabecalho-painel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #e7e3da;
+}
+
+th {
+  font-size: 12px;
+  color: #6e7b74;
+}
+
+.badge {
+  padding: 3px 10px;
+  border-radius: 10px;
+  background-color: #ddf1e6;
+  color: #1f7a52;
+  font-size: 12px;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE (Tablets e Celulares)
+   ========================================================================== */
+@media (max-width: 900px) {
+  .container, .resumo, .venda {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 800px) {
+    .menu {
+        width: 180px;
+    }
+    .conteudo {
+        margin-left: 180px;
+        width: calc(100% - 180px);
+    }
+}
+
+@media (max-width: 700px) {
+    /* Menu lateral vira menu no topo */
+    .menu {
+        position: static; 
+        width: 100%;
+        min-height: auto;
+        padding: 18px;
+    }
+    
+    .menu h2 { 
+        margin-bottom: 12px; 
+        text-align: center;
+    }
+    
+    .menu nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .menu nav a { 
+        padding: 10px; 
+        margin: 2px;
+    }
+    
+    .frase { 
+        display: none; 
+    }
+
+    .conteudo {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+
+    .topo input {
+        width: 100%;
+    }
+}
+</style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- NOVO MENU LATERAL -->
+    <aside class="menu">
+        <h2>oBOTICÁRIO</h2>
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="clientes.html">Clientes</a>
+            <a href="vendas.html" class="ativo">Vendas</a>
+            <a href="financeiro.html">Financeiro</a>
+            <a href="inventario.html">Inventário</a>
+        </nav>
+        <div class="frase">
+            <p>Beleza é<br>se sentir bem.</p>
+            <small>O BOTICÁRIO</small>
+        </div>
+    </aside>
+
+    <!-- CONTEÚDO DA PÁGINA -->
+    <main class="conteudo">
+
+      <!-- barra do topo -->
+      <header class="topo">
+        <input type="text" id="busca" placeholder="🔍 Buscar nas últimas vendas...">
+        <div class="usuario">
+        </div>
+      </header>
+
+      <!-- título da página -->
+      <div class="titulo-pagina">
+        <div>
+          <h1>Vendas</h1>
+          <p>Registre novas vendas e acompanhe o histórico.</p>
+        </div>
+        
+      </div>
+
+      <!-- cards de resumo -->
+      <section class="resumo">
+        <div class="card-resumo">
+          <span class="icone">🛒</span>
+          <strong id="total-vendas">0</strong>
+          <span class="rotulo">Vendas no mês</span>
+        </div>
+
+        <div class="card-resumo">
+          <span class="icone">💰</span>
+          <strong id="faturamento">R$ 0,00</strong>
+          <span class="rotulo">Faturamento do mês</span>
+        </div>
+
+        <div class="card-resumo">
+          <span class="icone">🧾</span>
+          <strong id="ticket-medio">R$ 0,00</strong>
+          <span class="rotulo">Ticket médio</span>
+        </div>
+      </section>
+
+      <!-- formulário + carrinho lado a lado -->
+      <div class="venda">
+
+        <section class="painel">
+          <h2>Registrar venda</h2>
+
+          <form id="form-venda">
+            <div class="campo">
+              <label for="cliente">Cliente</label>
+              <select id="cliente" required>
+                <option value="">Selecione um cliente</option>
+                <option>Mariana Silva</option>
+                <option>João Santos</option>
+                <option>Ana Costa</option>
+                <option>Lucas Oliveira</option>
+                <option>Fernanda Lima</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              <label for="produto">Produto</label>
+              <!-- o value de cada produto é o preço dele -->
+              <select id="produto" required>
+                <option value="">Selecione um produto</option>
+                <option value="189.90">Floratta Des. Colônia</option>
+                <option value="159.90">Malbec Des. Colônia</option>
+                <option value="129.90">Nativa SPA Ameixa</option>
+                <option value="59.90">Hidratante Corporal</option>
+                <option value="139.90">Egeo Dolce</option>
+              </select>
+            </div>
+
+            <div class="linha-quantidade">
+              <div class="campo campo-quantidade">
+                <label for="quantidade">Quantidade</label>
+                <input type="number" id="quantidade" min="1" value="1">
+              </div>
+              <button type="submit" class="botao">Adicionar ao carrinho</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="painel carrinho">
+          <h2>Carrinho</h2>
+
+          <!-- os itens são criados pelo JavaScript -->
+          <ul id="lista-carrinho"></ul>
+
+          <div class="total">
+            <span>Total:</span>
+            <strong id="total-carrinho">R$ 0,00</strong>
+          </div>
+
+          <button id="btn-finalizar" class="botao botaolargo">Finalizar venda</button>
+        </section>
+
+      </div>
+
+      <!-- tabela de últimas vendas -->
+      <section class="painel">
+        <div class="cabecalho-painel">
+          <h2>Últimas vendas</h2>
+          
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Cliente</th>
+                <th>Produto(s)</th>
+                <th>Valor</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-vendas">
+              <tr>
+                
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    // ===== VARIÁVEIS =====
+
+// lista dos produtos que estão no carrinho
+// cada item é um objeto: { nome, preco, quantidade }
+let carrinho = [];
+
+// números dos cards lá de cima
+let totalVendas = 48;
+let faturamento = 4315.20;   // 48 vendas x R$ 89,90
+
+// ===== PEGANDO OS ELEMENTOS DO HTML =====
+const formVenda = document.querySelector("#form-venda");
+const selectCliente = document.querySelector("#cliente");
+const selectProduto = document.querySelector("#produto");
+const inputQuantidade = document.querySelector("#quantidade");
+const listaCarrinho = document.querySelector("#lista-carrinho");
+const totalCarrinho = document.querySelector("#total-carrinho");
+const btnFinalizar = document.querySelector("#btn-finalizar");
+const btnNovaVenda = document.querySelector("#btn-nova-venda");
+const campoBusca = document.querySelector("#busca");
+const corpoTabela = document.querySelector("#tabela-vendas");
+
+const textoTotalVendas = document.querySelector("#total-vendas");
+const textoFaturamento = document.querySelector("#faturamento");
+const textoTicketMedio = document.querySelector("#ticket-medio");
+
+
+// ===== FUNÇÕES =====
+
+// transforma 249.8 em "R$ 249,80"
+function formatarMoeda(valor) {
+  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+// soma preço x quantidade de cada item do carrinho
+function calcularTotal() {
+  let total = 0;
+  for (let i = 0; i < carrinho.length; i++) {
+    total = total + carrinho[i].preco * carrinho[i].quantidade;
+  }
+  return total;
+}
+
+// desenha o carrinho na tela de acordo com a lista "carrinho"
+// (chamo essa função toda vez que a lista muda)
+function mostrarCarrinho() {
+  listaCarrinho.innerHTML = "";   // limpa a lista antes de desenhar de novo
+
+  if (carrinho.length === 0) {
+    listaCarrinho.innerHTML = "<li class='item vazio'>Nenhum produto no carrinho.</li>";
+  }
+
+  for (let i = 0; i < carrinho.length; i++) {
+    const item = carrinho[i];
+    const subtotal = item.preco * item.quantidade;
+
+    const li = document.createElement("li");
+    li.className = "item";
+    li.innerHTML =
+      "<span class='qtd'>" + item.quantidade + "x</span>" +
+      "<span class='nome'>" + item.nome + "</span>" +
+      "<span class='preco'>" + formatarMoeda(subtotal) + "</span>" +
+      "<button class='btn-remover'>🗑️</button>";
+
+    // botão da lixeira: remove o item que está na posição i da lista
+    const botaoRemover = li.querySelector(".btn-remover");
+    botaoRemover.addEventListener("click", function () {
+      carrinho.splice(i, 1);
+      mostrarCarrinho();
+    });
+
+    listaCarrinho.appendChild(li);
+  }
+
+  totalCarrinho.textContent = formatarMoeda(calcularTotal());
+}
+
+// escreve os números nos 3 cards do topo
+function atualizarResumo() {
+  textoTotalVendas.textContent = totalVendas;
+  textoFaturamento.textContent = formatarMoeda(faturamento);
+  // ticket médio = quanto faturou dividido pelo número de vendas
+  textoTicketMedio.textContent = formatarMoeda(faturamento / totalVendas);
+}
+
+// esconde as linhas da tabela que não têm o texto digitado na busca
+function filtrarTabela() {
+  const termo = campoBusca.value.toLowerCase();
+
+  for (let i = 0; i < corpoTabela.rows.length; i++) {
+    const linha = corpoTabela.rows[i];
+    const textoDaLinha = linha.textContent.toLowerCase();
+
+    if (textoDaLinha.includes(termo)) {
+      linha.style.display = "";       // mostra
+    } else {
+      linha.style.display = "none";   // esconde
+    }
+  }
+}
+
+
+// ===== EVENTOS =====
+
+// 1) Adicionar ao carrinho (quando o formulário é enviado)
+formVenda.addEventListener("submit", function (evento) {
+  // sem isso a página recarrega e perde o carrinho
+  evento.preventDefault();
+
+  // o texto da opção é o nome e o value é o preço
+  const nomeProduto = selectProduto.options[selectProduto.selectedIndex].text;
+  const preco = Number(selectProduto.value);
+  const quantidade = parseInt(inputQuantidade.value);
+
+  if (isNaN(quantidade) || quantidade < 1) {
+    alert("Digite uma quantidade válida (mínimo 1).");
+    return;
+  }
+
+  // se o produto já está no carrinho, só aumenta a quantidade
+  let jaExiste = false;
+  for (let i = 0; i < carrinho.length; i++) {
+    if (carrinho[i].nome === nomeProduto) {
+      carrinho[i].quantidade = carrinho[i].quantidade + quantidade;
+      jaExiste = true;
+    }
+  }
+
+  // se não estava, adiciona um item novo
+  if (jaExiste === false) {
+    carrinho.push({ nome: nomeProduto, preco: preco, quantidade: quantidade });
+  }
+
+  mostrarCarrinho();
+
+  // deixa o produto e a quantidade prontos para o próximo item
+  selectProduto.selectedIndex = 0;
+  inputQuantidade.value = 1;
+});
+
+
+// 2) Finalizar venda
+btnFinalizar.addEventListener("click", function () {
+  if (carrinho.length === 0) {
+    alert("Adicione pelo menos um produto ao carrinho.");
+    return;
+  }
+
+  if (selectCliente.value === "") {
+    alert("Escolha um cliente antes de finalizar.");
+    return;
+  }
+
+  const cliente = selectCliente.value;
+  const total = calcularTotal();
+
+  // monta o texto da coluna "Produto(s)": "2x Malbec + Egeo Dolce"
+  let produtos = "";
+  for (let i = 0; i < carrinho.length; i++) {
+    if (i > 0) {
+      produtos = produtos + " + ";
+    }
+    if (carrinho[i].quantidade > 1) {
+      produtos = produtos + carrinho[i].quantidade + "x ";
+    }
+    produtos = produtos + carrinho[i].nome;
+  }
+
+  // insertRow(0) cria uma linha nova no topo da tabela
+  const novaLinha = corpoTabela.insertRow(0);
+  const dataHoje = new Date().toLocaleDateString("pt-BR");
+  novaLinha.innerHTML =
+    "<td>" + dataHoje + "</td>" +
+    "<td>" + cliente + "</td>" +
+    "<td>" + produtos + "</td>" +
+    "<td>" + formatarMoeda(total) + "</td>" +
+    "<td><span class='badge'>Concluída</span></td>";
+
+  // a tabela mostra só as 5 últimas vendas: apaga a mais antiga
+  if (corpoTabela.rows.length > 5) {
+    corpoTabela.deleteRow(corpoTabela.rows.length - 1);
+  }
+
+  // atualiza os cards do topo
+  totalVendas = totalVendas + 1;
+  faturamento = faturamento + total;
+  atualizarResumo();
+
+  // limpa tudo para a próxima venda
+  carrinho = [];
+  mostrarCarrinho();
+  formVenda.reset();
+  filtrarTabela();
+
+  alert("Venda registrada para " + cliente + "! Total: " + formatarMoeda(total));
+});
+
+
+// 3) Busca: filtra a tabela a cada letra digitada
+campoBusca.addEventListener("input", filtrarTabela);
+
+
+// 4) Botão "Nova venda": coloca o cursor no campo de cliente
+if (btnNovaVenda) {
+    btnNovaVenda.addEventListener("click", function () {
+      selectCliente.focus();
+    });
+}
+
+
+// ===== QUANDO A PÁGINA ABRE =====
+mostrarCarrinho();
+atualizarResumo();
+
+document.addEventListener("DOMContentLoaded", function () {
+    const nomeSalvo = localStorage.getItem("usuarioLogado");
+    const emailSalvo = localStorage.getItem("emailLogado");
+
+    const elNome = document.getElementById("nome-usuario");
+    const elEmail = document.getElementById("email-usuario");
+
+    if (nomeSalvo && elNome) {
+        elNome.textContent = nomeSalvo;
+    }
+
+    if (emailSalvo && elEmail) {
+        elEmail.textContent = emailSalvo;
+    }
+});
+  </script>
+
+</body>
+</html>

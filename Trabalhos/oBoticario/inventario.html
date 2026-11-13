@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventário - oBoticário</title>
+ <link rel="shortcut icon" href="imagem/oBoticario.ico" type="image/x-icon">
+<style>
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #1C2B24;
+  background-color: #F8F6F1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Layout Geral */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   NOVO MENU LATERAL APLICADO
+   ========================================================================== */
+.menu {
+    width: 235px;
+    min-height: 100vh;
+    background-color: #0F3B2E;
+    color: white;
+    padding: 28px 18px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
+
+.menu h2 {
+    font-family: Georgia, serif;
+    font-size: 21px;
+    margin-bottom: 30px;
+    font-weight: normal;
+}
+
+.menu nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 13px 15px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.menu nav a:hover,
+.menu nav .ativo {
+    background-color: #2b6b53;
+}
+
+.frase {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    color: #d7e4dc;
+}
+
+.frase p {
+    font-family: Georgia, serif;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.frase small {
+    font-size: 10px;
+}
+
+/* ==========================================================================
+   CONTEÚDO PRINCIPAL (MAIN)
+   ========================================================================== */
+.main {
+  margin-left: 235px; /* Empurra o conteúdo para a direita do menu fixo */
+  width: calc(100% - 235px);
+  padding: 24px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search input {
+  width: 320px;
+  height: 40px;
+  padding: 0 14px;
+  background-color: #FFFFFF;
+  border: 1px solid #E7E3DA;
+  border-radius: 8px;
+  outline: none;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #1F5C46;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* Cabeçalho da Página */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+}
+
+.page-header p {
+  color: #6E7B74;
+  margin-top: 4px;
+}
+
+.btn-adicionar {
+  background-color: #1F5C46;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.btn-adicionar:hover {
+  background-color: #17493a;
+}
+
+/* Cards de Estatísticas */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.stat {
+  background-color: #FFFFFF;
+  border: 1px solid #E7E3DA;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-icon {
+  font-size: 20px;
+}
+
+.stat strong {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.stat-label {
+  color: #6E7B74;
+  font-size: 13px;
+}
+
+/* Painel da Tabela */
+.panel {
+  background-color: #FFFFFF;
+  border: 1px solid #E7E3DA;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Filtros da Tabela */
+.filters {
+  display: flex;
+  gap: 12px;
+}
+
+.search-table {
+  flex: 1;
+}
+
+.search-table input {
+  width: 100%;
+  height: 40px;
+  padding: 0 14px;
+  background-color: #FFFFFF;
+  border: 1px solid #E7E3DA;
+  border-radius: 8px;
+  outline: none;
+  font-size: 13px;
+}
+
+.select select {
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid #E7E3DA;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  color: #6E7B74;
+  outline: none;
+  font-size: 13px;
+}
+
+/* Tabela */
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+  padding: 12px 10px;
+  color: #6E7B74;
+  font-weight: 500;
+  font-size: 12px;
+  border-bottom: 1px solid #E7E3DA;
+}
+
+td {
+  padding: 14px 10px;
+  border-bottom: 1px solid #E7E3DA;
+  vertical-align: middle;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+}
+
+.thumb {
+  width: 32px;
+  height: 40px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* Ações da Tabela */
+.col-acoes {
+  text-align: right;
+  width: 100px;
+}
+
+.btn-acao {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.btn-acao:hover {
+  background-color: #F8F6F1;
+}
+
+.btn-acao.danger:hover {
+  background-color: #F9DDDD;
+}
+
+/* Modal de cadastro */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal-conteudo {
+  background: #FFFFFF;
+  width: 100%;
+  max-width: 450px;
+  padding: 28px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-conteudo h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.modal-conteudo form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-conteudo label {
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.modal-conteudo input,
+.modal-conteudo select {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #E7E3DA;
+  border-radius: 8px;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+}
+
+.modal-conteudo input:focus,
+.modal-conteudo select:focus {
+  border-color: #1F5C46;
+}
+
+.modal-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-acoes button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#btnCancelar {
+  background: #F0EEE8;
+  color: #1C2B24;
+}
+
+.badge-alerta {
+  background-color: #FBE6CC;
+  color: #B8620A;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.badge-perigo {
+  background-color: #F9DDDD;
+  color: #B42318;
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+
+/* ==========================================================================
+   RESPONSIVIDADE (Tablets e Celulares)
+   ========================================================================== */
+@media (max-width: 800px) {
+    .menu {
+        width: 180px;
+    }
+    .main {
+        margin-left: 180px;
+        width: calc(100% - 180px);
+    }
+}
+
+@media (max-width: 768px) {
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar,
+  .page-header {
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .search input {
+    width: 100%;
+  }
+
+  .filters {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 700px) {
+    .app {
+        flex-direction: column;
+    }
+    
+    /* Menu lateral vira menu no topo */
+    .menu {
+        position: static; 
+        width: 100%;
+        min-height: auto;
+        padding: 18px;
+    }
+    
+    .menu h2 { 
+        margin-bottom: 12px; 
+        text-align: center;
+    }
+    
+    .menu nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .menu nav a { 
+        padding: 10px; 
+        margin: 2px;
+    }
+    
+    .frase { 
+        display: none; 
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+}
+</style>
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- NOVO MENU LATERAL -->
+    <aside class="menu">
+        <h2>oBOTICÁRIO</h2>
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="clientes.html">Clientes</a>
+            <a href="vendas.html">Vendas</a>
+            <a href="financeiro.html">Financeiro</a>
+            <a href="inventario.html" class="ativo">Inventário</a>
+        </nav>
+        <div class="frase">
+            <p>Beleza é<br>se sentir bem.</p>
+            <small>O BOTICÁRIO</small>
+        </div>
+    </aside>
+
+    <!-- ===== Conteúdo Principal ===== -->
+    <div class="main">
+
+      <!-- Topbar -->
+      <header class="topbar">
+        <div class="search">
+          <input type="search" placeholder="Buscar no sistema..." id="buscaGeral">
+        </div>
+      </header>
+
+      <!-- Cabeçalho da Página -->
+      <div class="page-header">
+        <div>
+          <h1>Inventário</h1>
+          <p>Gerencie os produtos e o estoque da sua loja.</p>
+        </div>
+        <button class="btn-adicionar" id="btnAdicionar" type="button">
+  + Adicionar produto
+</button>
+      </div>
+
+      <!-- Cards de Estatísticas do Estoque -->
+      <section class="stats">
+        <div class="stat">
+          <div class="stat-icon">📦</div>
+          <strong id="totalProdutos">0</strong>
+          <span class="stat-label">Produtos em estoque</span>
+        </div>
+        <div class="stat">
+          <div class="stat-icon alerta">⚠️</div>
+          <strong id="estoqueBaixo">0</strong>
+          <span class="stat-label">Produtos com estoque baixo</span>
+        </div>
+        <div class="stat">
+          <div class="stat-icon perigo">❌</div>
+          <strong id="semEstoque">0</strong>
+          <span class="stat-label">Produtos sem estoque</span>
+        </div>
+      </section>
+
+      <!-- Painel da Tabela e Filtros -->
+      <section class="panel">
+        
+        <div class="filters">
+          <div class="search-table">
+            <input type="search" id="buscaProduto"
+placeholder="Buscar por nome, código...">
+          </div>
+          <div class="select">
+            <select id="filtroCategoria">
+  <option value="">Todas as categorias</option>
+  <option value="Perfumaria">Perfumaria</option>
+  <option value="Cuidados Pessoais">Cuidados Pessoais</option>
+  <option value="Cabelos">Cabelos</option>
+  <option value="Kits">Kits</option>
+</select>
+          </div>
+        </div>
+
+        <!-- Tabela de Produtos -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th>Categoria</th>
+                <th>Estoque</th>
+                <th>Valor</th>
+                <th class="col-acoes">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="listaProdutos">
+</tbody>
+
+          </table>
+        </div>
+
+      </section>
+      
+<!-- Modal de cadastro e edição -->
+<div class="modal" id="modalProduto" hidden>
+  <div class="modal-conteudo">
+    <h2 id="tituloModal">Adicionar produto</h2>
+
+    <form id="formProduto">
+
+      <input type="hidden" id="produtoId">
+
+      <label for="nomeProduto">Nome do produto</label>
+      <input type="text" id="nomeProduto" required
+        placeholder="Ex: Floratta Des. Colônia">
+
+      <label for="categoriaProduto">Categoria</label>
+      <select id="categoriaProduto" required>
+        <option value="">Selecione uma categoria</option>
+        <option value="Perfumaria">Perfumaria</option>
+        <option value="Cuidados Pessoais">Cuidados Pessoais</option>
+        <option value="Cabelos">Cabelos</option>
+        <option value="Kits">Kits</option>
+      </select>
+
+      <label for="codigoProduto">Código do produto</label>
+      <input type="text" id="codigoProduto"
+        placeholder="Ex: BOT001">
+
+      <label for="quantidadeProduto">Quantidade em estoque</label>
+      <input type="number" id="quantidadeProduto"
+        min="0" required>
+
+      <label for="valorProduto">Valor (R$)</label>
+      <input type="number" id="valorProduto"
+        min="0" step="0.01" required>
+
+      <div class="modal-acoes">
+        <button type="button" id="btnCancelar">
+          Cancelar
+        </button>
+
+        <button type="submit" class="btn-adicionar">
+          Salvar produto
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+  <script>
+    
+// =====================================
+// INVENTÁRIO - O BOTICÁRIO
+// =====================================
+
+const STORAGE_KEY = "inventarioBoticario";
+
+// Produtos iniciais
+const produtosIniciais = [
+  {
+    id: 1,
+    nome: "Floratta Des. Colônia",
+    codigo: "BOT001",
+    categoria: "Perfumaria",
+    quantidade: 35,
+    valor: 189.90
+  },
+  {
+    id: 2,
+    nome: "Malbec Des. Colônia",
+    codigo: "BOT002",
+    categoria: "Perfumaria",
+    quantidade: 28,
+    valor: 159.90
+  },
+  {
+    id: 3,
+    nome: "Nativa SPA Ameixa",
+    codigo: "BOT003",
+    categoria: "Cuidados Pessoais",
+    quantidade: 12,
+    valor: 129.90
+  },
+  {
+    id: 4,
+    nome: "Kit Presente Cuide-se Bem",
+    codigo: "BOT004",
+    categoria: "Kits",
+    quantidade: 18,
+    valor: 99.90
+  },
+  {
+    id: 5,
+    nome: "Egeo Dolce",
+    codigo: "BOT005",
+    categoria: "Perfumaria",
+    quantidade: 22,
+    valor: 139.90
+  },
+  {
+    id: 6,
+    nome: "Shampoo Nativa SPA",
+    codigo: "BOT006",
+    categoria: "Cabelos",
+    quantidade: 40,
+    valor: 69.90
+  }
+];
+
+// Carrega os dados salvos ou inicia com os exemplos
+let produtos;
+
+try {
+  const dadosSalvos = localStorage.getItem(STORAGE_KEY);
+  produtos = dadosSalvos
+    ? JSON.parse(dadosSalvos)
+    : produtosIniciais;
+
+  if (!Array.isArray(produtos)) {
+    produtos = produtosIniciais;
+  }
+} catch (erro) {
+  produtos = produtosIniciais;
+}
+
+// Elementos HTML
+const listaProdutos = document.getElementById("listaProdutos");
+const totalProdutos = document.getElementById("totalProdutos");
+const estoqueBaixo = document.getElementById("estoqueBaixo");
+const semEstoque = document.getElementById("semEstoque");
+
+const modal = document.getElementById("modalProduto");
+const formulario = document.getElementById("formProduto");
+
+const btnAdicionar = document.getElementById("btnAdicionar");
+const btnCancelar = document.getElementById("btnCancelar");
+
+const buscaProduto = document.getElementById("buscaProduto");
+const buscaGeral = document.getElementById("buscaGeral");
+const filtroCategoria = document.getElementById("filtroCategoria");
+
+// Salvar no navegador
+function salvarDados() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(produtos));
+}
+
+// Formatar valores em reais
+function formatarMoeda(valor) {
+  return Number(valor).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+}
+
+// Evita inserir texto como HTML
+function escaparHTML(texto) {
+  return String(texto).replace(/[&<>"']/g, caractere => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[caractere]);
+}
+
+// Atualizar tabela
+function renderizarProdutos() {
+  const pesquisa = buscaProduto.value.toLowerCase().trim();
+  const categoria = filtroCategoria.value;
+
+  const filtrados = produtos.filter(produto => {
+    const correspondePesquisa =
+      produto.nome.toLowerCase().includes(pesquisa) ||
+      String(produto.codigo || "").toLowerCase().includes(pesquisa);
+
+    const correspondeCategoria =
+      categoria === "" || produto.categoria === categoria;
+
+    return correspondePesquisa && correspondeCategoria;
+  });
+
+  listaProdutos.innerHTML = "";
+
+  if (filtrados.length === 0) {
+    listaProdutos.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center; padding:25px;">
+          Nenhum produto encontrado.
+        </td>
+      </tr>
+    `;
+  }
+
+  filtrados.forEach(produto => {
+    let estoqueHTML = produto.quantidade;
+
+    if (produto.quantidade === 0) {
+      estoqueHTML = `<span class="badge-perigo">Sem estoque</span>`;
+    } else if (produto.quantidade <= 15) {
+      estoqueHTML = `<span class="badge-alerta">${produto.quantidade}</span>`;
+    }
+
+    const linha = document.createElement("tr");
+
+    linha.innerHTML = `
+      <td>
+        <div class="product-info">
+          <span class="thumb"
+            style="background-color: #E9A9A5;"></span>
+          ${escaparHTML(produto.nome)}
+        </div>
+      </td>
+
+      <td>${escaparHTML(produto.categoria)}</td>
+
+      <td>${estoqueHTML}</td>
+
+      <td>${formatarMoeda(produto.valor)}</td>
+
+      <td class="col-acoes">
+        <button class="btn-acao"
+          type="button"
+          title="Editar"
+          aria-label="Editar produto"
+          data-acao="editar"
+          data-id="${produto.id}">✏️</button>
+
+        <button class="btn-acao danger"
+          type="button"
+          title="Excluir"
+          aria-label="Excluir produto"
+          data-acao="excluir"
+          data-id="${produto.id}">🗑️</button>
+      </td>
+    `;
+
+    listaProdutos.appendChild(linha);
+  });
+
+  atualizarEstatisticas();
+}
+
+// Atualizar os cards
+function atualizarEstatisticas() {
+  const total = produtos.reduce(
+    (soma, produto) => soma + Number(produto.quantidade), 0
+  );
+
+  const baixos = produtos.filter(
+    produto => produto.quantidade > 0 &&
+               produto.quantidade <= 15
+  ).length;
+
+  const zerados = produtos.filter(
+    produto => produto.quantidade === 0
+  ).length;
+
+  totalProdutos.textContent = total;
+  estoqueBaixo.textContent = baixos;
+  semEstoque.textContent = zerados;
+}
+
+// Abrir formulário
+function abrirModal(produto = null) {
+  formulario.reset();
+
+  if (produto) {
+    document.getElementById("tituloModal").textContent =
+      "Editar produto";
+
+    document.getElementById("produtoId").value = produto.id;
+    document.getElementById("nomeProduto").value = produto.nome;
+    document.getElementById("codigoProduto").value =
+      produto.codigo || "";
+    document.getElementById("categoriaProduto").value =
+      produto.categoria;
+    document.getElementById("quantidadeProduto").value =
+      produto.quantidade;
+    document.getElementById("valorProduto").value =
+      produto.valor;
+  } else {
+    document.getElementById("tituloModal").textContent =
+      "Adicionar produto";
+
+    document.getElementById("produtoId").value = "";
+  }
+
+  modal.hidden = false;
+  document.getElementById("nomeProduto").focus();
+}
+
+// Fechar formulário
+function fecharModal() {
+  modal.hidden = true;
+  formulario.reset();
+}
+
+// Cadastrar ou editar produto
+formulario.addEventListener("submit", function(evento) {
+  evento.preventDefault();
+
+  const id = document.getElementById("produtoId").value;
+
+  const nome = document.getElementById("nomeProduto").value.trim();
+  const codigo = document.getElementById("codigoProduto").value.trim();
+  const categoria = document.getElementById("categoriaProduto").value;
+  const quantidade = Number(
+    document.getElementById("quantidadeProduto").value
+  );
+  const valor = Number(
+    document.getElementById("valorProduto").value
+  );
+
+  if (
+    !nome ||
+    !categoria ||
+    !Number.isInteger(quantidade) ||
+    quantidade < 0 ||
+    !Number.isFinite(valor) ||
+    valor < 0
+  ) {
+    alert("Preencha os campos corretamente.");
+    return;
+  }
+
+  // Verificar código duplicado
+  const codigoDuplicado = codigo && produtos.some(produto =>
+    produto.codigo?.toLowerCase() === codigo.toLowerCase() &&
+    String(produto.id) !== id
+  );
+
+  if (codigoDuplicado) {
+    alert("Já existe um produto com esse código.");
+    return;
+  }
+
+  if (id) {
+    const indice = produtos.findIndex(
+      produto => String(produto.id) === id
+    );
+
+    if (indice !== -1) {
+      produtos[indice] = {
+        ...produtos[indice],
+        nome,
+        codigo,
+        categoria,
+        quantidade,
+        valor
+      };
+    }
+  } else {
+    produtos.push({
+      id: Date.now(),
+      nome,
+      codigo,
+      categoria,
+      quantidade,
+      valor
+    });
+  }
+
+  salvarDados();
+  renderizarProdutos();
+  fecharModal();
+});
+
+// Botão adicionar
+btnAdicionar.addEventListener("click", function() {
+  abrirModal();
+});
+
+// Botão cancelar
+btnCancelar.addEventListener("click", fecharModal);
+
+// Editar e excluir produtos
+listaProdutos.addEventListener("click", function(evento) {
+  const botao = evento.target.closest("button[data-acao]");
+
+  if (!botao) return;
+
+  const id = Number(botao.dataset.id);
+
+  if (botao.dataset.acao === "editar") {
+    const produto = produtos.find(item => item.id === id);
+
+    if (produto) {
+      abrirModal(produto);
+    }
+  }
+
+  if (botao.dataset.acao === "excluir") {
+    const produto = produtos.find(item => item.id === id);
+
+    if (!produto) return;
+
+    const confirmar = confirm(
+      `Deseja realmente excluir "${produto.nome}"?`
+    );
+
+    if (confirmar) {
+      produtos = produtos.filter(item => item.id !== id);
+
+      salvarDados();
+      renderizarProdutos();
+    }
+  }
+});
+
+// Pesquisa e filtro
+buscaProduto.addEventListener("input", renderizarProdutos);
+filtroCategoria.addEventListener("change", renderizarProdutos);
+
+// Pesquisa superior
+buscaGeral.addEventListener("input", function() {
+  buscaProduto.value = this.value;
+  renderizarProdutos();
+});
+
+// Fechar modal clicando fora
+modal.addEventListener("click", function(evento) {
+  if (evento.target === modal) {
+    fecharModal();
+  }
+});
+
+// Inicializar página
+salvarDados();
+renderizarProdutos();
+
+document.addEventListener("DOMContentLoaded", function () {
+    const nomeSalvo = localStorage.getItem("usuarioLogado");
+    const emailSalvo = localStorage.getItem("emailLogado");
+
+    const elNome = document.getElementById("nome-usuario");
+    const elEmail = document.getElementById("email-usuario");
+
+    if (nomeSalvo && elNome) {
+        elNome.textContent = nomeSalvo;
+    }
+
+    if (emailSalvo && elEmail) {
+        elEmail.textContent = emailSalvo;
+    }
+});
+  </script>
+
+</body>
+</html> 

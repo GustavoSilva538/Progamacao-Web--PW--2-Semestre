@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oBoticário - Clientes</title>
+    <link rel="shortcut icon" href="imagem/oBoticario.ico" type="image/x-icon">
+<style>
+/* ==========================================================================
+   1. CONFIGURAÇÕES GLOBAIS E RESETS
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    background-color: #F8F6F1;
+    font-family: Arial, sans-serif;
+    color: #1C2B24;
+}
+
+body {
+    display: flex;
+}
+
+/* ==========================================================================
+   2. NOVO MENU LATERAL APLICADO
+   ========================================================================== */
+.menu {
+    width: 235px;
+    min-height: 100vh;
+    background-color: #0F3B2E;
+    color: white;
+    padding: 28px 18px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
+
+.menu h2 {
+    font-family: Georgia, serif;
+    font-size: 21px;
+    margin-bottom: 30px;
+    font-weight: normal;
+}
+
+.menu nav a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 13px 15px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.menu nav a:hover,
+.menu nav .ativo {
+    background-color: #2b6b53;
+}
+
+.frase {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    color: #d7e4dc;
+}
+
+.frase p {
+    font-family: Georgia, serif;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.frase small {
+    font-size: 10px;
+}
+
+/* ==========================================================================
+   3. ÁREA PRINCIPAL
+   ========================================================================== */
+.principal {
+    margin-left: 235px; /* Ajuste para o menu fixo */
+    width: calc(100% - 235px);
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 25px 40px;
+    overflow-y: auto;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+#PesquisaTopo {
+    width: 100%;
+    max-width: 500px;
+    padding: 11px 16px;
+    font-family: inherit;
+    font-size: 14px;
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 8px;
+    outline: none;
+}
+
+#PesquisaTopo:focus,
+.item:focus {
+    border-color: #2E7D5E;
+    box-shadow: 0 0 0 3px rgba(46, 125, 94, 0.15);
+}
+
+.topoPagina {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.area {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.conteiner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 12px;
+}
+
+/* ==========================================================================
+   4. FORMULÁRIOS, INPUTS E TABELA
+   ========================================================================== */
+form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.item {
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    color: #6E7B74;
+    background-color: #ffffff;
+    border: 1px solid #E7E3DA;
+    border-radius: 8px;
+    outline: none;
+}
+
+#Pesquisa {
+    flex: 1;
+    min-width: 0;
+    border-radius: 10px;
+    border: solid 1px black;
+    padding: 5px;
+}
+
+form select.item {
+    width: 190px;
+    border: 1px solid  #1b1a18;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    padding: 14px 10px;
+    font-size: 13px;
+    text-align: left;
+    border-bottom: 1px solid #E7E3DA;
+}
+
+th.linha_titulos {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6E7B74;
+}
+
+tr.selecionada {
+    background-color: #F3F7F4;
+}
+
+.acao {
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #1F5C46;
+    background: transparent;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.acao:hover {
+    background-color: #E9EFEB;
+}
+
+.acao.excluir {
+    color: #D64545;
+}
+
+.acao.excluir:hover {
+    background-color: #FBE9E9;
+}
+
+/* ==========================================================================
+   5. BOTÕES
+   ========================================================================== */
+.cadastroCliente button {
+    padding: 11px 20px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+    background-color: #1F5C46;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cadastroCliente button:hover,
+.EditarCadastro button:hover {
+    background-color: #17493a;
+}
+
+/* ==========================================================================
+   6. DETALHES DO CLIENTE
+   ========================================================================== */
+.detalhesCliente {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-shrink: 0;
+    width: 300px;
+    padding: 20px;
+    background-color: #EFEDE4;
+    border-radius: 12px;
+    border:1px solid #000000;
+}
+
+.detalhesCliente p {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.registro {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #E7E3DA;
+    border-radius: 10px;
+}
+
+.registro h3 {
+    font-size: 15px;
+}
+
+.registro small {
+    color: #6E7B74;
+}
+
+.informacoesCliente {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #E7E3DA;
+    border-radius: 10px;
+}
+
+.informacoesCliente div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 14px;
+}
+
+.informacoesCliente dt {
+    font-size: 12px;
+    color: #6E7B74;
+}
+
+.EditarCadastro button {
+    width: 100%;
+    padding: 11px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    background-color: #1F5C46;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* ==========================================================================
+   7. TÍTULO DA PÁGINA
+   ========================================================================== */
+.titulo dt {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.titulo dd {
+    font-size: 15px;
+    color: #6E7B74;
+}
+
+/* ==========================================================================
+   RESPONSIVO
+   ========================================================================== */
+@media (max-width: 1100px) {
+    .area {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .detalhesCliente {
+        width: 100%;
+    }
+}
+
+@media (max-width: 800px) {
+    .menu {
+        width: 180px;
+    }
+    .principal {
+        margin-left: 180px;
+        width: calc(100% - 180px);
+    }
+}
+
+@media (max-width: 700px) {
+    body {
+        flex-direction: column;
+        height: auto;
+    }
+
+    /* Menu lateral vira menu no topo */
+    .menu {
+        position: static; 
+        width: 100%;
+        min-height: auto;
+        padding: 18px;
+    }
+    
+    .menu h2 { 
+        margin-bottom: 12px; 
+        text-align: center;
+    }
+    
+    .menu nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .menu nav a { 
+        padding: 10px; 
+        margin: 2px;
+    }
+    
+    .frase { 
+        display: none; 
+    }
+
+    .principal {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+        overflow-y: visible;
+    }
+
+    .topoPagina {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .titulo dt {
+        font-size: 28px;
+    }
+
+    form {
+        flex-direction: column;
+    }
+
+    form select.item {
+        width: 100%;
+    }
+
+    .conteiner {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 600px;
+    }
+}
+</style>
+</head>
+<body>
+
+    <!-- NOVO MENU LATERAL -->
+    <aside class="menu">
+        <h2>oBOTICÁRIO</h2>
+        <nav>
+            <a href="Home.html">Home</a>
+            <a href="clientes.html" class="ativo">Clientes</a>
+            <a href="vendas.html">Vendas</a>
+            <a href="financeiro.html">Financeiro</a>
+            <a href="inventario.html">Inventário</a>
+        </nav>
+        <div class="frase">
+            <p>Beleza é<br>se sentir bem.</p>
+            <small>O BOTICÁRIO</small>
+        </div>
+    </aside>
+
+    <main class="principal">
+        <header>
+            <input id="Pesquisa" type="search" placeholder="Buscar no Sistema" size="80">
+        </header>
+
+        <div class="cadastroCliente">
+            <button type="button">+ Cadastrar cliente</button>
+        </div>
+
+        <dl class="titulo">
+            <dt>Clientes</dt>
+            <dd>Gerencie o cadastro e consulte os clientes da sua loja  </dd>
+        </dl>
+
+        <div class="area">
+            <div class="conteiner">
+                <form action="#">
+                    <input class="item" type="search" id="Pesquisa" aria-label="Buscar cliente"
+                           placeholder="Buscar por Nome, CPF, telefone...">
+
+                    <select class="item" name="tipo" id="Tipos" aria-label="Filtrar por tipo">
+                        <option value="todos">Todos os Tipos</option>
+                        <option value="pf">Pessoa Física</option>
+                        <option value="pj">Pessoa Jurídica</option>
+                    </select>
+
+                    <select class="item" name="ordem" id="Ordem" aria-label="Ordenar lista">
+                        <option value="az">Ordenar por: Nome (A - Z)</option>
+                        <option value="za">Ordenar por: Nome (Z - A)</option>
+                        <option value="recentes">Ordenar por mais Recentes</option>
+                    </select>
+                </form>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="linha_titulos" scope="col">Nome</th>
+                            <th class="linha_titulos" scope="col">CPF</th>
+                            <th class="linha_titulos" scope="col">Telefone</th>
+                            <th class="linha_titulos" scope="col">Tipo</th>
+                            <th class="linha_titulos" scope="col">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <!-- O tbody será populado dinamicamente pelo JS -->
+                    <tbody>
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td colspan="5"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="detalhesCliente">
+                <p>Detalhes do Cliente</p>
+
+                <div class="registro">
+                    <h3>Nenhum cliente selecionado</h3>
+                </div>
+
+                <dl class="informacoesCliente">
+                    <div class="cpf">
+                        <dt>CPF</dt>
+                        <dd>-</dd>
+                    </div>
+
+                    <div class="telefone">
+                        <dt>Telefone</dt>
+                        <dd>-</dd>
+                    </div>
+
+                    <div class="emailCli">
+                        <dt>E-mail</dt>
+                        <dd>-</dd>
+                    </div>
+
+                    <div class="tipoPessoa">
+                        <dt>Tipo</dt>
+                        <dd>-</dd>
+                    </div>
+                </dl>
+
+                <div class="EditarCadastro">
+                    <button type="button">Editar o Cadastro</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        // ==========================================================================
+        // PAINEL DE CLIENTES - O Boticário
+        // ==========================================================================
+
+        // ---------- "Banco de dados" mockado ----------
+        let clientes = [
+            {
+                id: 1,
+                nome: "Mariana Alves",
+                cpf: "000.999.222-05",
+                telefone: "(11) 00414-2313",
+                email: "mari@exemplo.com",
+                tipo: "pf",
+                dataCadastro: "2025-01-10"
+            },
+            {
+                id: 2,
+                nome: "João Pereira",
+                cpf: "111.222.333-44",
+                telefone: "(11) 98888-1234",
+                email: "joao.pereira@exemplo.com",
+                tipo: "pf",
+                dataCadastro: "2025-03-22"
+            },
+            {
+                id: 3,
+                nome: "Cosméticos Bela Ltda",
+                cpf: "12.345.678/0001-90",
+                telefone: "(11) 3333-4444",
+                email: "contato@bela.com.br",
+                tipo: "pj",
+                dataCadastro: "2025-06-05"
+            }
+        ];
+
+        let proximoId = 4;
+        let clienteSelecionadoId = clientes[0]?.id ?? null;
+
+        // ---------- Referências aos elementos do DOM ----------
+        const tbody = document.querySelector("tbody");
+        const tfoot = document.querySelector("tfoot td");
+        // Ajuste: pegar o input dentro do .conteiner form para o filtro da tabela
+        const inputBusca = document.querySelector(".conteiner form #Pesquisa"); 
+        const selectTipo = document.getElementById("Tipos");
+        const selectOrdem = document.getElementById("Ordem");
+        const btnCadastrar = document.querySelector(".cadastroCliente button");
+        const btnEditar = document.querySelector(".EditarCadastro button");
+        const form = document.querySelector(".conteiner form");
+
+        // Painel de detalhes
+        const detalheNome = document.querySelector(".registro h3");
+        const detalheCpf = document.querySelector(".cpf dd");
+        const detalheTelefone = document.querySelector(".telefone dd");
+        const detalheEmail = document.querySelector(".emailCli dd");
+        const detalheTipo = document.querySelector(".tipoPessoa dd");
+
+        // ---------- Utilidades ----------
+        function normalizar(texto) {
+            return texto
+                .toString()
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, ""); 
+        }
+
+        function rotuloTipo(tipo) {
+            return tipo === "pj" ? "Pessoa Jurídica" : "Pessoa Física";
+        }
+
+        // ---------- Filtro + ordenação ----------
+        function obterClientesFiltrados() {
+            const termo = inputBusca ? normalizar(inputBusca.value.trim()) : "";
+            const tipo = selectTipo.value;
+            const ordem = selectOrdem.value;
+
+            let lista = clientes.filter((cliente) => {
+                const bateBusca =
+                    termo === "" ||
+                    normalizar(cliente.nome).includes(termo) ||
+                    normalizar(cliente.cpf).includes(termo) ||
+                    normalizar(cliente.telefone).includes(termo);
+
+                const bateTipo = tipo === "todos" || cliente.tipo === tipo;
+
+                return bateBusca && bateTipo;
+            });
+
+            if (ordem === "az") {
+                lista.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+            } else if (ordem === "za") {
+                lista.sort((a, b) => b.nome.localeCompare(a.nome, "pt-BR"));
+            } else if (ordem === "recentes") {
+                lista.sort((a, b) => new Date(b.dataCadastro) - new Date(a.dataCadastro));
+            }
+
+            return lista;
+        }
+
+        // ---------- Renderização da tabela ----------
+        function renderizarTabela() {
+            const lista = obterClientesFiltrados();
+            tbody.innerHTML = "";
+
+            if (lista.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5">Nenhum cliente encontrado.</td>
+                    </tr>`;
+                tfoot.textContent = "0 clientes encontrados";
+                renderizarDetalhes(null);
+                return;
+            }
+
+            lista.forEach((cliente) => {
+                const tr = document.createElement("tr");
+                tr.dataset.id = cliente.id;
+                if (cliente.id === clienteSelecionadoId) {
+                    tr.classList.add("selecionada");
+                }
+
+                tr.innerHTML = `
+                    <td>${cliente.nome}</td>
+                    <td>${cliente.cpf}</td>
+                    <td>${cliente.telefone}</td>
+                    <td>${rotuloTipo(cliente.tipo)}</td>
+                    <td>
+                        <button type="button" class="acao editar" data-id="${cliente.id}">Editar</button>
+                        <button type="button" class="acao excluir" data-id="${cliente.id}">Excluir</button>
+                    </td>
+                `;
+
+                tr.addEventListener("click", (evento) => {
+                    if (evento.target.closest("button")) return;
+                    selecionarCliente(cliente.id);
+                });
+
+                tbody.appendChild(tr);
+            });
+
+            tfoot.textContent = `${lista.length} cliente(s) encontrado(s)`;
+
+            tbody.querySelectorAll(".acao.editar").forEach((btn) => {
+                btn.addEventListener("click", () => editarCliente(Number(btn.dataset.id)));
+            });
+            tbody.querySelectorAll(".acao.excluir").forEach((btn) => {
+                btn.addEventListener("click", () => excluirCliente(Number(btn.dataset.id)));
+            });
+
+            const aindaExiste = lista.some((c) => c.id === clienteSelecionadoId);
+            if (!aindaExiste) {
+                clienteSelecionadoId = lista[0].id;
+            }
+            renderizarDetalhes(clientes.find((c) => c.id === clienteSelecionadoId));
+        }
+
+        // ---------- Painel de detalhes ----------
+        function renderizarDetalhes(cliente) {
+            if (!cliente) {
+                detalheNome.textContent = "Nenhum cliente selecionado";
+                detalheCpf.textContent = "-";
+                detalheTelefone.textContent = "-";
+                detalheEmail.textContent = "-";
+                detalheTipo.textContent = "-";
+                return;
+            }
+
+            detalheNome.textContent = `Nome Cliente: ${cliente.nome}`;
+            detalheCpf.textContent = cliente.cpf;
+            detalheTelefone.textContent = cliente.telefone;
+            detalheEmail.textContent = cliente.email;
+            detalheTipo.textContent = rotuloTipo(cliente.tipo);
+        }
+
+        function selecionarCliente(id) {
+            clienteSelecionadoId = id;
+            renderizarTabela();
+        }
+
+        // ---------- Cadastro ----------
+        function cadastrarCliente() {
+            const nome = prompt("Nome do cliente:");
+            if (!nome) return;
+
+            const cpf = prompt("CPF ou CNPJ:") || "";
+            const telefone = prompt("Telefone:") || "";
+            const email = prompt("E-mail:") || "";
+            const tipo = confirm("Clique OK para Pessoa Jurídica, ou Cancelar para Pessoa Física")
+                ? "pj"
+                : "pf";
+
+            const novoCliente = {
+                id: proximoId++,
+                nome,
+                cpf,
+                telefone,
+                email,
+                tipo,
+                dataCadastro: new Date().toISOString()
+            };
+
+            clientes.push(novoCliente);
+            clienteSelecionadoId = novoCliente.id;
+            renderizarTabela();
+        }
+
+        // ---------- Edição ----------
+        function editarCliente(id) {
+            const cliente = clientes.find((c) => c.id === id);
+            if (!cliente) return;
+
+            const nome = prompt("Nome do cliente:", cliente.nome);
+            if (nome === null) return; 
+
+            const cpf = prompt("CPF ou CNPJ:", cliente.cpf) ?? cliente.cpf;
+            const telefone = prompt("Telefone:", cliente.telefone) ?? cliente.telefone;
+            const email = prompt("E-mail:", cliente.email) ?? cliente.email;
+
+            cliente.nome = nome || cliente.nome;
+            cliente.cpf = cpf;
+            cliente.telefone = telefone;
+            cliente.email = email;
+
+            clienteSelecionadoId = cliente.id;
+            renderizarTabela();
+        }
+
+        // ---------- Exclusão ----------
+        function excluirCliente(id) {
+            const cliente = clientes.find((c) => c.id === id);
+            if (!cliente) return;
+
+            const confirmou = confirm(`Tem certeza que deseja excluir "${cliente.nome}"?`);
+            if (!confirmou) return;
+
+            clientes = clientes.filter((c) => c.id !== id);
+
+            if (clienteSelecionadoId === id) {
+                clienteSelecionadoId = clientes[0]?.id ?? null;
+            }
+
+            renderizarTabela();
+        }
+
+        // ---------- Eventos ----------
+        if(form) form.addEventListener("submit", (e) => e.preventDefault()); 
+
+        if(inputBusca) inputBusca.addEventListener("input", renderizarTabela);
+        if(selectTipo) selectTipo.addEventListener("change", renderizarTabela);
+        if(selectOrdem) selectOrdem.addEventListener("change", renderizarTabela);
+
+        if(btnCadastrar) btnCadastrar.addEventListener("click", cadastrarCliente);
+
+        if(btnEditar) btnEditar.addEventListener("click", () => {
+            if (clienteSelecionadoId) editarCliente(clienteSelecionadoId);
+        });
+
+        // ---------- Inicialização ----------
+        document.addEventListener("DOMContentLoaded", renderizarTabela);
+    </script>
+</body>
+</html>

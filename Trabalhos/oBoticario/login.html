@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - oBoticário</title>
+  <link rel="shortcut icon" href="imagem/oBoticario.ico" type="image/x-icon">
+<style>
+    /* ==========================================================================
+   1. BASE & RESET (Regras globais e resets de elementos)
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0; /* Cuidado: margin global de 5px em '*' costuma quebrar layouts complexos no futuro */
+    padding: 0;
+}
+
+body {
+    background: linear-gradient(to bottom right, #0d352a, #4b805c); 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, sans-serif; /* Boa prática definir uma fonte base aqui */
+}
+
+/* Elementos de texto base */
+h1 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-family: Georgia, serif;
+    color: white;
+}
+
+p {
+    text-align: center;
+}
+
+
+
+/* ==========================================================================
+   2. LAYOUT / ESTRUTURA (Como os grandes blocos se posicionam)
+   ========================================================================== */
+main {
+    display: flex;
+    position: relative;
+    max-width: 400px;
+    min-height: 45vh;
+    margin: 20px;
+    padding: 40px; /* Simplificado de '40px 40px' para apenas '40px' */
+    border: 1px solid;
+    text-align: left; /* O último seletor sempre sobrescreve o anterior (você tinha 'center' e depois 'left') */
+    background-color: rgba(255, 255, 255, 0.918);
+}
+
+footer {
+    font-size: 12px;
+    max-height: 2vh;
+    padding: 15px;
+}
+
+
+/* ==========================================================================
+   3. COMPONENTES (Formulários, Botões e Elementos específicos)
+   ========================================================================== */
+
+/* --- Formulário e Inputs --- */
+form {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    text-align: left;
+   
+}
+
+#Nome{
+    display: inline;
+    margin: 5px;
+    padding: 5px;
+}
+
+#Nome:hover{
+    font-size: 15px;
+    transition: all 0.5s ease-in;
+}
+
+form input:nth-child(1){
+    display: inline;
+    margin: 5px;
+    padding: 5px;
+}
+
+form input:nth-child(1):hover{ /*Esquecer o E-mail */
+    font-size: 15px;
+    transition: all 0.5s ease-in;
+}
+
+
+form input:nth-child(2) {
+    padding: 15px;
+}
+
+section h2:nth-child(1) {
+    font-size: 30px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+/* --- Componente: Botão Continuar --- */
+.continuar {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 10px; /* Removido o 'padding: 5px' que estava duplicado acima deste */
+    border: none;
+    border-radius: 4px;
+    background-color: #00A470; 
+    color: whitesmoke;
+    font-size: 20px;
+    transition: all 0.5s ease-in; /* Transição suave para o efeito hover */
+}
+
+.continuar:hover {
+    background-color: rgb(145, 145, 145);
+    font-size: 22px;
+    box-shadow: 5px 5px 5px 5px rgba(124, 115, 115, 0.233);
+}
+
+/* --- Componente: Botão Google --- */
+.botaoGoogle {
+    padding: 5px;
+    margin: 15px;
+    border: 1px solid rgba(83, 83, 83, 0.082);
+    background-color: white;
+    color: black;
+    text-decoration: none;
+    text-align: center;
+    box-shadow: 2px 2px 2px 2px rgba(175, 147, 147, 0.466);
+    transition: all 0.5s ease-in;
+}
+
+.botaoGoogle:hover {
+    background-color: rgba(182, 172, 172, 0.733);
+    font-size: 18px;
+}
+
+/* --- Outros Elementos de Links e Texto --- */
+.descricao {
+    text-align: left;
+    font-size: 17px;
+}
+
+#Esquecer-email {
+    color: rgb(90, 89, 89);
+    text-align: center;
+    text-decoration: none;
+    align-self: center;
+
+}
+
+#Esquecer-email:hover {
+    color: rgb(76, 118, 207);
+    font-size: 17px;
+    transition: all 0.5s ease-in;
+}
+</style>
+</head>
+<body> 
+    
+    <h1>oBoticário</h1>
+    
+    <main>
+        <section>
+            <h2 class="descricao">Olá!</h2>
+            <p class="descricao">Para continuar, digite seu e-mail</p>
+
+            <form action="#">
+                <input type="email" id="Email" placeholder="Email *" required>
+                <input type="text" id="Nome" placeholder="Digite seu nome" required />
+                <a href="#" id="Esquecer-email">Esqueci meu e-mail</a>
+
+                <button class="continuar">Continuar</button>
+
+                <p>------------- ou ultilize sua conta --------------</p>
+
+                <a class="botaoGoogle" href="https://google.com">Google</a>
+
+                <footer>
+                    <p>Protegido por reCAPTCHA - Privacidade | Condições</p>
+                </footer>
+            </form>
+        </section>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const formulario = document.querySelector("form");
+    const inputNome = document.getElementById("Nome");
+    const inputEmail = document.getElementById("Email");
+
+    if (formulario && inputNome && inputEmail) {
+        formulario.addEventListener("submit", function (evento) {
+            evento.preventDefault(); // Evita o recarregamento padrão do form
+
+            const nomeDigitado = inputNome.value.trim();
+            const emailDigitado = inputEmail.value.trim();
+
+            if (nomeDigitado && emailDigitado) {
+                // Salva o nome e o e-mail separadamente no localStorage
+                localStorage.setItem("usuarioLogado", nomeDigitado);
+                localStorage.setItem("emailLogado", emailDigitado);
+
+                // Redireciona para a Home
+                window.location.href = "Home.html";
+            }
+        });
+    }
+});
+    </script>
+</body>
+</html>
